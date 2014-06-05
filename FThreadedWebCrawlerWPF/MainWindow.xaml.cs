@@ -27,8 +27,9 @@ namespace FThreadedWebCrawlerWPF
 		public MainWindow()
 		{
 			InitializeComponent();
-			
+
 			this.mainVM = new MainVM();
+			this.mainVM.setListBoxTodo(lbTodoList);
 			
 			this.DataContext = mainVM;
 			lbTodoList.DataContext = mainVM.TodoItems;

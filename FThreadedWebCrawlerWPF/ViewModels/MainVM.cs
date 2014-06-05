@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Threading;
 
@@ -20,6 +21,8 @@ namespace FThreadedWebCrawlerWPF.ViewModels
 		public const int THREADPOOL_SIZE = 20;
 
 		private bool _terminate = false;
+
+		private ListBox listBoxTodo;
 
 		private ManualResetEvent _re;
 
@@ -149,6 +152,7 @@ namespace FThreadedWebCrawlerWPF.ViewModels
 						lock (TodoItems)
 						{
 							TodoItems.Add(item);
+							listBoxTodo.ScrollIntoView(item);
 							UriItems.RemoveAt(0);
 						}
 					}));
@@ -248,6 +252,11 @@ namespace FThreadedWebCrawlerWPF.ViewModels
 			{
 				Console.WriteLine("DownloadFile() Caught Exception: " + e.ToString());
 			}
+		}
+
+		public void setListBoxTodo(ListBox lb)
+		{
+			listBoxTodo = lb;
 		}
 
 		public void Kill()
