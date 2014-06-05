@@ -1,4 +1,6 @@
-﻿using System;
+﻿using FThreadedWebCrawlerWPF.Models;
+using FThreadedWebCrawlerWPF.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,28 +22,55 @@ namespace FThreadedWebCrawlerWPF
 	/// </summary>
 	public partial class MainWindow : Window
 	{
+		private MainVM mainVM;
+
 		public MainWindow()
 		{
 			InitializeComponent();
+			
+			this.mainVM = new MainVM();
+			
+			this.DataContext = mainVM;
+			lbTodoList.DataContext = mainVM.TodoItems;
+			lbUris.DataContext = mainVM.UriItems;
+
+		}
+
+		public void crawlFinished()
+		{
+			mainVM.ResumeEnabled = false;
+			mainVM.PauseEnabled = false;
+			mainVM.CrawlEnabled = true;
 		}
 
 		private void submit_Click(object sender, RoutedEventArgs e)
 		{
+			mainVM.ResumeEnabled = false;
+			mainVM.PauseEnabled = true;
+			mainVM.CrawlEnabled = false;
 			
+			mainVM.StartCrawling();
 		}
 
 		private void pause_Click(object sender, RoutedEventArgs e)
 		{
-			Button btn = (Button)sender;
+			mainVM.ResumeEnabled = true;
+			mainVM.PauseEnabled = false;
 
-			if (btn.Content == "Pause")
-			{
-				
-			}
-			else
-			{ //Resume
-				
-			}
+			mainVM.PauseAll();
+		}
+
+		private void resume_Click(object sender, RoutedEventArgs e)
+		{
+			mainVM.ResumeEnabled = false;
+			mainVM.PauseEnabled = true;
+			mainVM.ResumeAll();
+		}
+
+		private void FThreadedWebCrawler_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			mainVM.ResumeAll();
+			mainVM.Kill();
 		}
 	}
 }
